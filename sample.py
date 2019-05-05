@@ -1,79 +1,57 @@
 import signal
 from xbox360controller import Xbox360Controller
+with Xbox360Controller(0, axis_threshold=0.2) as controller:
+    print("Xbox controller printing in piTankEx")
+    while 1:
+        print("X %1.3f" % controller.hat.x)
+        print("Y %1.3f" % controller.hat.y)
+        #Control de los botones pulsados
+        if controller.hat.x>=0.9:
+            str1 = "r"
+        elif controller.hat.x<=-0.9:
+            str1 = "l"
+        elif controller.hat.y>=0.9:
+            str1 = "u"
+        elif controller.hat.y<=-0.9:
+            str1 = "d"
+        elif controller.button_trigger_r.is_pressed:
+            str1 = "T"
+        elif controller.button_start.is_pressed:
+            str1 = 'E'
+        elif controller.button_a.is_pressed: 
+            str1 = "A"
+        elif controller.button_b.is_pressed: 
+            str1 = "B"
+        elif controller.button_y.is_pressed: 
+            str1 = "Y"
+        elif controller.button_x.is_pressed: 
+            str1 = "X"
+        else: 
+            str1 = "N"  
 
+        #Control de joystick derecho como digital
+        if controller.axis_r.x > 0.5:
+            str2 = "R"
+        elif controller.axis_r.x < -0.5:
+            str2 = "L"
+        elif controller.axis_r.y > 0.5:
+            str2 = "D"
+        elif controller.axis_r.y < -0.5:
+            str2 = "U" 
+        else: 
+            str2 = "N" 
 
-def on_button_pressed(button):
-    print('Button {0} was pressed'.format(button.name))
-    str1 = "%s" % button.name
-    str2 = 'N'
-    str3 = "0.000"
-    str4 = "0.000"
-    f1 = open("../piTankEx/xbox360.txt","w+")
-    f1.write(str1 + " " + str2 + " " + str3 + " " + str4)
-    f1.close()
+        #Control de joystick izquierdo para regulacion de velocidad de ruedas
+        if controller.axis_l.x > 0.3 or controller.axis_l.x < -0.3: 
+            str3 = "%1.3f" % controller.axis_l.x
+        else: 
+            str3 = "0.0"
 
-def on_button_released(button):
-    print('Button {0} was released'.format(button.name))
-    str1 = 'N'
-    str2 = 'N'
-    str3 = "0.000"
-    str4 = "0.000"
-    f1 = open("../piTankEx/xbox360.txt","w+")
-    f1.write(str1 + " " + str2 + " " + str3 + " " + str4)
-    f1.close()
+        if controller.axis_l.y > 0.3 or controller.axis_l.y < -0.3:
+            str4 = "%1.3f" % -controller.axis_l.y
+        else:
+            str4 = "0.0"
 
-def on_axis_moved(axis):
-    print('Axis {0} moved to {1} {2}'.format(axis.name, axis.x, axis.y))
-    if axis.name == "Left" :
-        str1 = 'N'
-        str2 = 'N'
-        str3 = "%1.3f" % axis.x
-        str4 = "%1.3f" % axis.y
         f1 = open("../piTankEx/xbox360.txt","w+")
         f1.write(str1 + " " + str2 + " " + str3 + " " + str4)
         f1.close()
-
-    elif axis.name == "Right" :
-        str1 = "N"
-        if axis.x > 0.5 :
-            str2 = 'R'
-        elif axis.x < -0.5 :
-            str2 = 'L'
-        elif axis.y > 0.5 :
-            str2 = 'U'
-        elif axis.y < -0.5 :
-            str2 = 'D'
-        str3 = "0.000"
-        str4 = "0.000"
-        f1 = open("../piTankEx/xbox360.txt","w+")
-        f1.write(str1 + " " + str2 + " " + str3 + " " + str4)
-        f1.close()
-
-try:
-    with Xbox360Controller(0, axis_threshold=0.2) as controller:
-        # Button events
-        controller.button_a.when_pressed = on_button_pressed
-        controller.button_a.when_released = on_button_released
-
-        controller.button_b.when_pressed = on_button_pressed
-        controller.button_b.when_released = on_button_released
-
-        controller.button_x.when_pressed = on_button_pressed
-        controller.button_x.when_released = on_button_released
-
-        controller.button_y.when_pressed = on_button_pressed
-        controller.button_y.when_released = on_button_released
-
-        controller.button_start.when_pressed = on_button_pressed
-        controller.button_start.when_released = on_button_released
-
-        controller.button_trigger_right.when_pressed = on_button_pressed
-        controller.button_trigger_right.when_released = on_button_released
-
-        # Left and right axis move event
-        controller.axis_l.when_moved = on_axis_moved
-        controller.axis_r.when_moved = on_axis_moved
-
-        signal.pause()
-except KeyboardInterrupt:
-    pass
