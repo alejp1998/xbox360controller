@@ -52,4 +52,4 @@ with Xbox360Controller(0, axis_threshold=0.2) as controller:
         f1.write(str1 + " " + str2 + " " + str3 + " " + str4)
         f1.close()
 
-        time.sleep(0.005)#Wait 5 miliseconds before next loop 
+        time.sleep(0.1)#Wait 5 miliseconds before next loop 
