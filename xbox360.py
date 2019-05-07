@@ -8,15 +8,11 @@ with Xbox360Controller(0, axis_threshold=0.2) as controller:
         str2 = 'N'
         str3 = "0.000"
         str4 = "0.000"
-        
-        f1 = open("../piTankEx/xbox360.txt","w+")
-        f1.write(str1 + " " + str2 + " " + str3 + " " + str4)
-        f1.close()
 
         #Control de los botones pulsados
         if controller.hat.x>=0.5:
             str1 = "r"
-        elif controller.hat.x<=-0.5
+        elif controller.hat.x<=-0.5:
             str1 = "l"
         elif controller.hat.y>=0.5:
             str1 = "u"
@@ -55,3 +51,5 @@ with Xbox360Controller(0, axis_threshold=0.2) as controller:
         f1 = open("../piTankEx/xbox360.txt","w+")
         f1.write(str1 + " " + str2 + " " + str3 + " " + str4)
         f1.close()
+
+        time.sleep(0.005)#Wait 5 miliseconds before next loop 
